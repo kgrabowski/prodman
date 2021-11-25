@@ -21,7 +21,7 @@ public class ProductController {
     }
 
     @GetMapping("/products/{productId}")
-    public Product getProduct(@PathVariable Integer productId) {
+    public ProductDTO getProduct(@PathVariable Integer productId) {
         try {
             return productService.fetch(productId);
         } catch (EntityNotFoundException e) {

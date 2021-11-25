@@ -30,11 +30,10 @@ public class ProductService {
     }
 
     @Transactional
-    public Product fetch(final Integer id) {
+    public ProductDTO fetch(final Integer id) {
         final Product product = getProduct(id);
         product.setViews(product.getViews() + 1);
-        productRepository.save(product);
-        return product;
+        return mapToDTO(product);
     }
 
     private Product mapToEntity(final ProductDTO productDTO, final Product product) {
@@ -44,6 +43,16 @@ public class ProductService {
         product.setViews(0);
         product.setDeleted(false);
         return product;
+    }
+
+    private ProductDTO mapToDTO(final Product product) {
+        final ProductDTO productDTO = new ProductDTO();
+        productDTO.setId(product.getId());
+        productDTO.setName(product.getName());
+        productDTO.setDescription(product.getDescription());
+        productDTO.setPrice(product.getPrice());
+        productDTO.setViews(product.getViews());
+        return productDTO;
     }
 
     private Product getProduct(Integer id) {
