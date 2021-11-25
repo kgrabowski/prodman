@@ -4,6 +4,9 @@ import com.galvanize.prodman.domain.Product;
 import com.galvanize.prodman.model.ProductDTO;
 import com.galvanize.prodman.repository.ProductRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.EntityNotFoundException;
 
 @Service
 public class ProductService {
@@ -26,6 +29,14 @@ public class ProductService {
         productRepository.deleteById(id);
     }
 
+    @Transactional
+    public Product fetch(final Integer id) {
+        final Product product = getProduct(id);
+        product.setViews(product.getViews() + 1);
+        productRepository.save(product);
+        return product;
+    }
+
     private Product mapToEntity(final ProductDTO productDTO, final Product product) {
         product.setName(productDTO.getName());
         product.setDescription(productDTO.getDescription());
@@ -33,5 +44,11 @@ public class ProductService {
         product.setViews(0);
         product.setDeleted(false);
         return product;
+    }
+
+    private Product getProduct(Integer id) {
+        return productRepository
+                .findById(id)
+                .orElseThrow(EntityNotFoundException::new);
     }
 }
