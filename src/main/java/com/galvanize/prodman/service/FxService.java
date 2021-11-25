@@ -19,10 +19,16 @@ public class FxService {
 
     private final RestTemplate restTemplate;
 
-    public FxService(final RestTemplateBuilder restTemplateBuilder) {this.restTemplate = restTemplateBuilder.build();}
+    public FxService(final RestTemplateBuilder restTemplateBuilder) {
+        this.restTemplate = restTemplateBuilder.build();
+    }
 
     public FxResponse getQuotes() {
-        String endPoint = String.format("%s?access_key=%s&currencies=%s&format=1", fxApiUrl, fxApiKey, SUPPORTED_CURRENCIES);
+        final String endPoint = String.format(
+                "%s?access_key=%s&currencies=%s&format=1",
+                fxApiUrl,
+                fxApiKey,
+                SUPPORTED_CURRENCIES);
         return restTemplate.getForObject(endPoint, FxResponse.class);
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.Map;
 
 @Service
 public class ProductService {
@@ -30,10 +31,10 @@ public class ProductService {
     }
 
     @Transactional
-    public ProductDTO fetch(final Integer id) {
+    public ProductDTO fetch(final Integer id, final String currency) {
         final Product product = getProduct(id);
         product.setViews(product.getViews() + 1);
-        return mapToDTO(product);
+        return mapToDTO(product, currency);
     }
 
     private Product mapToEntity(final ProductDTO productDTO, final Product product) {
@@ -45,19 +46,28 @@ public class ProductService {
         return product;
     }
 
-    private ProductDTO mapToDTO(final Product product) {
+    private ProductDTO mapToDTO(final Product product, final String currency) {
         final ProductDTO productDTO = new ProductDTO();
         productDTO.setId(product.getId());
         productDTO.setName(product.getName());
         productDTO.setDescription(product.getDescription());
-        productDTO.setPrice(product.getPrice());
+        productDTO.setPrice(convertPrice(product.getPrice(), currency));
         productDTO.setViews(product.getViews());
         return productDTO;
     }
 
-    private Product getProduct(Integer id) {
+    private Product getProduct(final Integer id) {
         return productRepository
                 .findById(id)
                 .orElseThrow(EntityNotFoundException::new);
+    }
+
+    private Double convertPrice(final Double price, final String targetCurrency) {
+        final Map<String, Double> quotes = fxService.getQuotes().getQuotes();
+        final Double conversionRate = quotes.get("USD" + targetCurrency);
+        if (conversionRate == null) {
+            throw new IllegalStateException("Couldn't find conversion rate for USD to " + targetCurrency);
+        }
+        return price * conversionRate;
     }
 }
