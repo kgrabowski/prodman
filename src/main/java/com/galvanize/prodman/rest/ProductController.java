@@ -1,5 +1,6 @@
 package com.galvanize.prodman.rest;
 
+import com.galvanize.prodman.model.Currency;
 import com.galvanize.prodman.model.ProductDTO;
 import com.galvanize.prodman.service.ProductService;
 import org.springframework.http.HttpStatus;
@@ -21,7 +22,7 @@ public class ProductController {
 
     @GetMapping("/products/{productId}")
     public ProductDTO getProduct(@PathVariable Integer productId,
-                                 @RequestParam(required = false, defaultValue = "USD") String currency) {
+                                 @RequestParam(required = false, defaultValue = "USD") Currency currency) {
         try {
             return productService.fetch(productId, currency);
         } catch (EntityNotFoundException e) {

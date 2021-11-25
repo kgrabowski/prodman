@@ -1,6 +1,7 @@
 package com.galvanize.prodman.service;
 
 import com.galvanize.prodman.domain.Product;
+import com.galvanize.prodman.model.Currency;
 import com.galvanize.prodman.model.FxResponse;
 import com.galvanize.prodman.model.ProductDTO;
 import com.galvanize.prodman.repository.ProductRepository;
@@ -38,7 +39,7 @@ public class ProductServiceTest {
         when(productRepository.findById(1)).thenReturn(Optional.of(product));
         when(fxService.getQuotes()).thenReturn(fxResponse);
 
-        final ProductDTO productDTO = productService.fetch(1, "CAD");
+        final ProductDTO productDTO = productService.fetch(1, Currency.CAD);
 
         assertThat(productDTO)
                 .extracting("id", "name", "description", "price")

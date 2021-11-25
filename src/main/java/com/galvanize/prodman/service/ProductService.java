@@ -1,6 +1,7 @@
 package com.galvanize.prodman.service;
 
 import com.galvanize.prodman.domain.Product;
+import com.galvanize.prodman.model.Currency;
 import com.galvanize.prodman.model.ProductDTO;
 import com.galvanize.prodman.repository.ProductRepository;
 import org.springframework.stereotype.Service;
@@ -31,7 +32,7 @@ public class ProductService {
     }
 
     @Transactional
-    public ProductDTO fetch(final Integer id, final String currency) {
+    public ProductDTO fetch(final Integer id, final Currency currency) {
         final Product product = getProduct(id);
         product.setViews(product.getViews() + 1);
         return mapToDTO(product, currency);
@@ -46,7 +47,7 @@ public class ProductService {
         return product;
     }
 
-    private ProductDTO mapToDTO(final Product product, final String currency) {
+    private ProductDTO mapToDTO(final Product product, final Currency currency) {
         final ProductDTO productDTO = new ProductDTO();
         productDTO.setId(product.getId());
         productDTO.setName(product.getName());
@@ -62,7 +63,7 @@ public class ProductService {
                 .orElseThrow(EntityNotFoundException::new);
     }
 
-    private Double convertPrice(final Double price, final String targetCurrency) {
+    private Double convertPrice(final Double price, final Currency targetCurrency) {
         final Map<String, Double> quotes = fxService.getQuotes().getQuotes();
         final Double conversionRate = quotes.get("USD" + targetCurrency);
         if (conversionRate == null) {
