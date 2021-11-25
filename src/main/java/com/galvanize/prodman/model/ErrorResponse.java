@@ -1,9 +1,9 @@
 package com.galvanize.prodman.model;
 
-import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
 
 @Getter
 @Setter
@@ -13,5 +13,4 @@ public class ErrorResponse {
     private String exception;
     private String message;
     private List<FieldError> fieldErrors;
-
 }

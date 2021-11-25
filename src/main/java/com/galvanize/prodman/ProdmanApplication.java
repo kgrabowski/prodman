@@ -11,5 +11,4 @@ public class ProdmanApplication {
     public static void main(String[] args) {
         SpringApplication.run(ProdmanApplication.class, args);
     }
-
 }

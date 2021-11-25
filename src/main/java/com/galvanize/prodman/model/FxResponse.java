@@ -5,15 +5,14 @@ import lombok.Setter;
 
 import java.util.Map;
 
-
 @Getter
 @Setter
 public class FxResponse {
 
-  private Map<String, Double> quotes;
+    private Map<String, Double> quotes;
 
-  @Override
-  public String toString() {
-    return quotes.toString();
-  }
+    @Override
+    public String toString() {
+        return quotes.toString();
+    }
 }

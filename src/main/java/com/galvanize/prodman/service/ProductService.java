@@ -5,7 +5,6 @@ import com.galvanize.prodman.model.ProductDTO;
 import com.galvanize.prodman.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
-
 @Service
 public class ProductService {
 
@@ -35,5 +34,4 @@ public class ProductService {
         product.setDeleted(false);
         return product;
     }
-
 }

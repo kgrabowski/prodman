@@ -9,20 +9,20 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class FxService {
 
-  private static final String SUPPORTED_CURRENCIES = "USD,CAD,EUR,GBP";
+    private static final String SUPPORTED_CURRENCIES = "USD,CAD,EUR,GBP";
 
-  @Value("${fx.api.url}")
-  private String fxApiUrl;
+    @Value("${fx.api.url}")
+    private String fxApiUrl;
 
-  @Value("${fx.api.key}")
-  private String fxApiKey;
+    @Value("${fx.api.key}")
+    private String fxApiKey;
 
-  private final RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
 
-  public FxService(final RestTemplateBuilder restTemplateBuilder) { this.restTemplate = restTemplateBuilder.build(); }
+    public FxService(final RestTemplateBuilder restTemplateBuilder) {this.restTemplate = restTemplateBuilder.build();}
 
-  public FxResponse getQuotes() {
-    String endPoint = String.format("%s?access_key=%s&currencies=%s&format=1", fxApiUrl, fxApiKey, SUPPORTED_CURRENCIES);
-    return restTemplate.getForObject(endPoint, FxResponse.class);
-  }
+    public FxResponse getQuotes() {
+        String endPoint = String.format("%s?access_key=%s&currencies=%s&format=1", fxApiUrl, fxApiKey, SUPPORTED_CURRENCIES);
+        return restTemplate.getForObject(endPoint, FxResponse.class);
+    }
 }
