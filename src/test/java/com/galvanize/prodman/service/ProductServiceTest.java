@@ -7,6 +7,7 @@ import com.galvanize.prodman.model.ProductDTO;
 import com.galvanize.prodman.repository.ProductRepository;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -27,7 +28,7 @@ public class ProductServiceTest {
         product.setId(1);
         product.setName("Sample");
         product.setDescription("Sample product");
-        product.setPrice(100.0);
+        product.setPrice(BigDecimal.valueOf(100.0));
         product.setViews(5);
 
         final Map<String, Double> quotes = new HashMap<>();

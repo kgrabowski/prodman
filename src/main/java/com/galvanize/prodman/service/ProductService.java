@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import java.math.BigDecimal;
 import java.util.Map;
 
 @Service
@@ -68,12 +69,12 @@ public class ProductService {
         return new EntityNotFoundException(message);
     }
 
-    private Double convertPrice(final Double price, final Currency targetCurrency) {
+    private BigDecimal convertPrice(final BigDecimal price, final Currency targetCurrency) {
         final Map<String, Double> quotes = fxService.getQuotes().getQuotes();
         final Double conversionRate = quotes.get("USD" + targetCurrency);
         if (conversionRate == null) {
             throw new IllegalStateException("Couldn't find conversion rate for USD to " + targetCurrency);
         }
-        return price * conversionRate;
+        return price.multiply(BigDecimal.valueOf(conversionRate));
     }
 }

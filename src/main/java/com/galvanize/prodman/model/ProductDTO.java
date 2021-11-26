@@ -8,6 +8,7 @@ import lombok.Setter;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.math.BigDecimal;
 
 @Getter
 @Setter
@@ -26,7 +27,7 @@ public class ProductDTO {
     @Digits(integer = 10, fraction = 2)
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     @Schema(type = "string", example = "1.00")
-    private Double price;
+    private BigDecimal price;
 
     private Integer views;
 }
