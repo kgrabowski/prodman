@@ -4,12 +4,12 @@ import com.galvanize.prodman.model.Currency;
 import com.galvanize.prodman.model.FxResponse;
 import com.galvanize.prodman.service.FxGateway;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -28,12 +28,12 @@ public class CurrencyLayerGateway implements FxGateway {
 
     private final RestTemplate restTemplate;
 
-    public CurrencyLayerGateway(final RestTemplateBuilder restTemplateBuilder) {
-        this.restTemplate = restTemplateBuilder.build();
+    public CurrencyLayerGateway(final RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
     }
 
     @Cacheable("quotes")
-    public FxResponse fetchQuotes() {
+    public FxResponse requestQuotes() {
         final String endPoint = String.format(
                 "%s?access_key=%s&currencies=%s&format=1",
                 fxApiUrl,
@@ -43,7 +43,7 @@ public class CurrencyLayerGateway implements FxGateway {
     }
 
     public Map<String, BigDecimal> getQuotes() {
-        return fetchQuotes().getQuotes();
+        return requestQuotes().getQuotes();
     }
 
     @Override
@@ -54,5 +54,16 @@ public class CurrencyLayerGateway implements FxGateway {
             throw new IllegalStateException("Couldn't find conversion rate for USD to " + currency);
         }
         return quote;
+    }
+
+    @Override
+    public Map<Currency, BigDecimal> fetchQuotes() {
+        final Map<Currency, BigDecimal> result = new HashMap<>();
+        getQuotes().forEach((key, value) -> {
+            final String currencyText = key.substring(3);
+            final Currency currency = Currency.parse(currencyText);
+            result.put(currency, value);
+        });
+        return result;
     }
 }
