@@ -15,9 +15,9 @@ import java.util.Map;
 public class ProductService {
 
     private final ProductRepository productRepository;
-    private final FxGateway fxGateway;
+    private final CurrencyLayerGateway fxGateway;
 
-    public ProductService(final ProductRepository productRepository, final FxGateway fxGateway) {
+    public ProductService(final ProductRepository productRepository, final CurrencyLayerGateway fxGateway) {
         this.productRepository = productRepository;
         this.fxGateway = fxGateway;
     }

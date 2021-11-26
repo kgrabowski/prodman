@@ -17,7 +17,7 @@ import static org.mockito.Mockito.when;
 
 public class ProductServiceTest {
     private final ProductRepository productRepository = mock(ProductRepository.class);
-    private final FxGateway fxGateway = mock(FxGateway.class);
+    private final CurrencyLayerGateway fxGateway = mock(CurrencyLayerGateway.class);
 
     private final ProductService productService = new ProductService(productRepository, fxGateway);
 
