@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.persistence.EntityNotFoundException;
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping(value = "/api/", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -31,7 +32,7 @@ public class ProductController {
     }
 
     @PostMapping("/products")
-    public Integer addProduct(@RequestBody ProductDTO productDTO) {
+    public Integer addProduct(@Valid @RequestBody ProductDTO productDTO) {
         return productService.create(productDTO);
     }
 }
