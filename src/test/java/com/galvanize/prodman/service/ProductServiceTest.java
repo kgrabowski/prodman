@@ -17,9 +17,9 @@ import static org.mockito.Mockito.when;
 
 public class ProductServiceTest {
     private final ProductRepository productRepository = mock(ProductRepository.class);
-    private final FxService fxService = mock(FxService.class);
+    private final FxGateway fxGateway = mock(FxGateway.class);
 
-    private final ProductService productService = new ProductService(productRepository, fxService);
+    private final ProductService productService = new ProductService(productRepository, fxGateway);
 
     @Test
     void convertsPriceToRequestedCurrencyWhenRetrievingProduct() {
@@ -34,7 +34,7 @@ public class ProductServiceTest {
         quotes.put("USDCAD", BigDecimal.valueOf(1.5));
 
         when(productRepository.findById(1)).thenReturn(Optional.of(product));
-        when(fxService.getQuotes()).thenReturn(quotes);
+        when(fxGateway.getQuotes()).thenReturn(quotes);
 
         final ProductDTO productDTO = productService.fetch(1, Currency.CAD);
 

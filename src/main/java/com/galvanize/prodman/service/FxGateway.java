@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
-public class FxService {
+public class FxGateway {
     private static final String SUPPORTED_CURRENCIES = Stream.of(Currency.values())
             .map(Currency::name)
             .collect(Collectors.joining(","));
@@ -27,7 +27,7 @@ public class FxService {
 
     private final RestTemplate restTemplate;
 
-    public FxService(final RestTemplateBuilder restTemplateBuilder) {
+    public FxGateway(final RestTemplateBuilder restTemplateBuilder) {
         this.restTemplate = restTemplateBuilder.build();
     }
 

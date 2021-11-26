@@ -15,11 +15,11 @@ import java.util.Map;
 public class ProductService {
 
     private final ProductRepository productRepository;
-    private final FxService fxService;
+    private final FxGateway fxGateway;
 
-    public ProductService(final ProductRepository productRepository, final FxService fxService) {
+    public ProductService(final ProductRepository productRepository, final FxGateway fxGateway) {
         this.productRepository = productRepository;
-        this.fxService = fxService;
+        this.fxGateway = fxGateway;
     }
 
     public Integer create(final ProductDTO productDTO) {
@@ -70,7 +70,7 @@ public class ProductService {
     }
 
     private BigDecimal convertPrice(final BigDecimal price, final Currency targetCurrency) {
-        final Map<String, BigDecimal> quotes = fxService.getQuotes();
+        final Map<String, BigDecimal> quotes = fxGateway.getQuotes();
         final BigDecimal conversionRate = quotes.get("USD" + targetCurrency);
         if (conversionRate == null) {
             throw new IllegalStateException("Couldn't find conversion rate for USD to " + targetCurrency);
