@@ -70,11 +70,11 @@ public class ProductService {
     }
 
     private BigDecimal convertPrice(final BigDecimal price, final Currency targetCurrency) {
-        final Map<String, Double> quotes = fxService.getQuotes().getQuotes();
-        final Double conversionRate = quotes.get("USD" + targetCurrency);
+        final Map<String, BigDecimal> quotes = fxService.getQuotes().getQuotes();
+        final BigDecimal conversionRate = quotes.get("USD" + targetCurrency);
         if (conversionRate == null) {
             throw new IllegalStateException("Couldn't find conversion rate for USD to " + targetCurrency);
         }
-        return price.multiply(BigDecimal.valueOf(conversionRate));
+        return price.multiply(conversionRate);
     }
 }

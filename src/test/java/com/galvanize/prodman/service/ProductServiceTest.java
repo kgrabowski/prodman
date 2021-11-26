@@ -31,8 +31,8 @@ public class ProductServiceTest {
         product.setPrice(BigDecimal.valueOf(100.0));
         product.setViews(5);
 
-        final Map<String, Double> quotes = new HashMap<>();
-        quotes.put("USDCAD", 1.5);
+        final Map<String, BigDecimal> quotes = new HashMap<>();
+        quotes.put("USDCAD", BigDecimal.valueOf(1.5));
 
         final FxResponse fxResponse = new FxResponse();
         fxResponse.setQuotes(quotes);
