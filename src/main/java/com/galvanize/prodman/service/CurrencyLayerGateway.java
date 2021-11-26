@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
-public class CurrencyLayerGateway {
+public class CurrencyLayerGateway implements FxGateway {
     private static final String SUPPORTED_CURRENCIES = Stream.of(Currency.values())
             .map(Currency::name)
             .collect(Collectors.joining(","));
@@ -43,5 +43,15 @@ public class CurrencyLayerGateway {
 
     public Map<String, BigDecimal> getQuotes() {
         return fetchQuotes().getQuotes();
+    }
+
+    @Override
+    public BigDecimal fetchQuote(Currency currency) {
+        final Map<String, BigDecimal> quotes = getQuotes();
+        final BigDecimal quote = quotes.get("USD" + currency);
+        if (quote == null) {
+            throw new IllegalStateException("Couldn't find conversion rate for USD to " + currency);
+        }
+        return quote;
     }
 }
