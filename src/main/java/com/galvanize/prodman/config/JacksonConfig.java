@@ -1,5 +1,6 @@
 package com.galvanize.prodman.config;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
@@ -16,6 +17,7 @@ public class JacksonConfig {
                     DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,
                     DeserializationFeature.ACCEPT_FLOAT_AS_INT,
                     SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+            jacksonObjectMapperBuilder.serializationInclusion(JsonInclude.Include.NON_EMPTY);
         };
     }
 }

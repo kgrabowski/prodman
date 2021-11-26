@@ -11,14 +11,23 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice(annotations = RestController.class)
 public class RestExceptionHandler {
 
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleNotFound(final EntityNotFoundException exception) {
+        final ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setHttpStatus(HttpStatus.NOT_FOUND.value());
+        errorResponse.setMessage(exception.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(ResponseStatusException.class)
-    public ResponseEntity<ErrorResponse> handleNotFound(final ResponseStatusException exception) {
+    public ResponseEntity<ErrorResponse> handleResponseException(final ResponseStatusException exception) {
         final ErrorResponse errorResponse = new ErrorResponse();
         errorResponse.setHttpStatus(exception.getStatus().value());
         errorResponse.setException(exception.getClass().getSimpleName());

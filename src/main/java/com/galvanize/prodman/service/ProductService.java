@@ -60,7 +60,12 @@ public class ProductService {
     private Product getProduct(final Integer id) {
         return productRepository
                 .findById(id)
-                .orElseThrow(EntityNotFoundException::new);
+                .orElseThrow(() -> productNotFound(id));
+    }
+
+    private EntityNotFoundException productNotFound(Integer id) {
+        final String message = String.format("Product with ID %s does not exist in the database", id);
+        return new EntityNotFoundException(message);
     }
 
     private Double convertPrice(final Double price, final Currency targetCurrency) {
