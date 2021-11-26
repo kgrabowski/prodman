@@ -9,17 +9,16 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.math.BigDecimal;
-import java.util.Map;
 
 @Service
 public class ProductService {
 
     private final ProductRepository productRepository;
-    private final CurrencyLayerGateway fxGateway;
+    private final FxService fxService;
 
-    public ProductService(final ProductRepository productRepository, final CurrencyLayerGateway fxGateway) {
+    public ProductService(final ProductRepository productRepository, final FxService fxService) {
         this.productRepository = productRepository;
-        this.fxGateway = fxGateway;
+        this.fxService = fxService;
     }
 
     public Integer create(final ProductDTO productDTO) {
@@ -33,10 +32,16 @@ public class ProductService {
     }
 
     @Transactional
-    public ProductDTO fetch(final Integer id, final Currency currency) {
-        final Product product = getProduct(id);
-        product.setViews(product.getViews() + 1);
-        return mapToDTO(product, currency);
+    public ProductDTO fetch(final Integer productId, final Currency currency) {
+        final Product product = getProduct(productId);
+        incrementViews(product);
+
+        final ProductDTO productDTO = mapToDTO(product);
+        if (currency != Currency.USD) {
+            convertPrice(productDTO, currency);
+        }
+
+        return productDTO;
     }
 
     private Product mapToEntity(final ProductDTO productDTO, final Product product) {
@@ -48,12 +53,12 @@ public class ProductService {
         return product;
     }
 
-    private ProductDTO mapToDTO(final Product product, final Currency currency) {
+    private ProductDTO mapToDTO(final Product product) {
         final ProductDTO productDTO = new ProductDTO();
         productDTO.setId(product.getId());
         productDTO.setName(product.getName());
         productDTO.setDescription(product.getDescription());
-        productDTO.setPrice(convertPrice(product.getPrice(), currency));
+        productDTO.setPrice(product.getPrice());
         productDTO.setViews(product.getViews());
         return productDTO;
     }
@@ -69,12 +74,13 @@ public class ProductService {
         return new EntityNotFoundException(message);
     }
 
-    private BigDecimal convertPrice(final BigDecimal price, final Currency targetCurrency) {
-        final Map<String, BigDecimal> quotes = fxGateway.getQuotes();
-        final BigDecimal conversionRate = quotes.get("USD" + targetCurrency);
-        if (conversionRate == null) {
-            throw new IllegalStateException("Couldn't find conversion rate for USD to " + targetCurrency);
-        }
-        return price.multiply(conversionRate);
+    private void incrementViews(Product product) {
+        product.setViews(product.getViews() + 1);
+    }
+
+    private void convertPrice(ProductDTO productDTO, Currency currency) {
+        final BigDecimal originalPrice = productDTO.getPrice();
+        final BigDecimal convertedPrice = fxService.convert(originalPrice, currency);
+        productDTO.setPrice(convertedPrice);
     }
 }
