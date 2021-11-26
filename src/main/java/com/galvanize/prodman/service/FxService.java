@@ -8,6 +8,8 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.math.BigDecimal;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -30,12 +32,16 @@ public class FxService {
     }
 
     @Cacheable("quotes")
-    public FxResponse getQuotes() {
+    public FxResponse fetchQuotes() {
         final String endPoint = String.format(
                 "%s?access_key=%s&currencies=%s&format=1",
                 fxApiUrl,
                 fxApiKey,
                 SUPPORTED_CURRENCIES);
         return restTemplate.getForObject(endPoint, FxResponse.class);
+    }
+
+    public Map<String, BigDecimal> getQuotes() {
+        return fetchQuotes().getQuotes();
     }
 }

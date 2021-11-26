@@ -2,7 +2,6 @@ package com.galvanize.prodman.service;
 
 import com.galvanize.prodman.domain.Product;
 import com.galvanize.prodman.model.Currency;
-import com.galvanize.prodman.model.FxResponse;
 import com.galvanize.prodman.model.ProductDTO;
 import com.galvanize.prodman.repository.ProductRepository;
 import org.junit.jupiter.api.Test;
@@ -34,11 +33,8 @@ public class ProductServiceTest {
         final Map<String, BigDecimal> quotes = new HashMap<>();
         quotes.put("USDCAD", BigDecimal.valueOf(1.5));
 
-        final FxResponse fxResponse = new FxResponse();
-        fxResponse.setQuotes(quotes);
-
         when(productRepository.findById(1)).thenReturn(Optional.of(product));
-        when(fxService.getQuotes()).thenReturn(fxResponse);
+        when(fxService.getQuotes()).thenReturn(quotes);
 
         final ProductDTO productDTO = productService.fetch(1, Currency.CAD);
 
