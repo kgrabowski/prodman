@@ -17,6 +17,8 @@ public class JacksonConfig {
                     DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,
                     DeserializationFeature.ACCEPT_FLOAT_AS_INT,
                     SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+
+            // Reduce noise in returned responses by not including empty/null fields
             jacksonObjectMapperBuilder.serializationInclusion(JsonInclude.Include.NON_EMPTY);
         };
     }
