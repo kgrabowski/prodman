@@ -44,6 +44,6 @@ public class ProductServiceTest {
 
         assertThat(productDTO)
                 .extracting("id", "name", "description", "price")
-                .contains(1, "Sample", "Sample product", 150.0);
+                .contains(1, "Sample", "Sample product", new BigDecimal("150.00"));
     }
 }
