@@ -32,38 +32,25 @@ public class CurrencyLayerGateway implements FxGateway {
         this.restTemplate = restTemplate;
     }
 
+    @Override
     @Cacheable("quotes")
-    public FxResponse requestQuotes() {
+    public Map<Currency, BigDecimal> fetchQuotes() {
+        final Map<Currency, BigDecimal> result = new HashMap<>();
+        final FxResponse response = requestQuotes();
+        response.getQuotes().forEach((key, value) -> {
+            final String currencyText = key.substring(3);
+            final Currency currency = Currency.parse(currencyText);
+            result.put(currency, value);
+        });
+        return result;
+    }
+
+    private FxResponse requestQuotes() {
         final String endPoint = String.format(
                 "%s?access_key=%s&currencies=%s&format=1",
                 fxApiUrl,
                 fxApiKey,
                 SUPPORTED_CURRENCIES);
         return restTemplate.getForObject(endPoint, FxResponse.class);
-    }
-
-    public Map<String, BigDecimal> getQuotes() {
-        return requestQuotes().getQuotes();
-    }
-
-    @Override
-    public BigDecimal fetchQuote(Currency currency) {
-        final Map<String, BigDecimal> quotes = getQuotes();
-        final BigDecimal quote = quotes.get("USD" + currency);
-        if (quote == null) {
-            throw new IllegalStateException("Couldn't find conversion rate for USD to " + currency);
-        }
-        return quote;
-    }
-
-    @Override
-    public Map<Currency, BigDecimal> fetchQuotes() {
-        final Map<Currency, BigDecimal> result = new HashMap<>();
-        getQuotes().forEach((key, value) -> {
-            final String currencyText = key.substring(3);
-            final Currency currency = Currency.parse(currencyText);
-            result.put(currency, value);
-        });
-        return result;
     }
 }
