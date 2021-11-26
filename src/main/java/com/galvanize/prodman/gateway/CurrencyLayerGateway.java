@@ -1,7 +1,8 @@
-package com.galvanize.prodman.service;
+package com.galvanize.prodman.gateway;
 
 import com.galvanize.prodman.model.Currency;
 import com.galvanize.prodman.model.FxResponse;
+import com.galvanize.prodman.service.FxGateway;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.cache.annotation.Cacheable;
