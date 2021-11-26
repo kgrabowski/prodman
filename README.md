@@ -3,11 +3,12 @@
 Major modifications to the skeleton code include:
 
 1. Extracting the original `FxService` code into a new `CurrencyLayerGateway` class
-3. Implementing currency-conversion functionality inside the `FxService` class
-4. Adding the required functionality of fetching a single product to the `ProductService` class
-5. Adding some custom exceptions, together with improved error handling
-6. Creating the `Currency` class
-7. Using `BigDecimal` in place of `Double`
+2. Implementing currency-conversion functionality inside the `FxService` class
+3. Adding the required functionality of fetching a single product to the `ProductService` class
+4. Adding some custom exceptions, together with improved error handling
+5. Creating the `Currency` class
+6. Using `BigDecimal` in place of `Double`
+7. Caching queries to fetch the currency conversion rates
 
 I have also added some unit tests around the new functionality.
 
@@ -89,6 +90,20 @@ accurately, and there is often a major rounding error present especially around 
 For simplicity, I've decided to go with the `BigDecimal` class. It allows us to represent monetary values accurately and
 it facilitates rounding after conversions. However, in a real project you might need to consider using a custom `Money`
 class, based on fixed-point math. `BigDecimal` math tends to get very slow when doing lots of computations.
+
+### Caching FX Queries
+
+Firing off queries to the third-party API on each client request has some massive drawbacks:
+
+1. We increase the network traffic, which might end up saturating the network and slowing everything down
+2. We increase the likelihood of encountering transient HTTP issues
+3. We risk encountering throttling from the third-party API (something I've immediately hit once I fired off the
+   requests one-after-another)
+
+It's also just not very nice when we try to run a DOS attack on an unsuspecting API provider.
+
+All this led me to implementing caching around fetching the FX quotes. Currency exchange is only ancillary to our
+application, so we can live with slightly-stale data.
 
 ## Ideas for Improvement
 
