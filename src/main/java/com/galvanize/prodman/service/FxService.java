@@ -4,6 +4,7 @@ import com.galvanize.prodman.model.Currency;
 import com.galvanize.prodman.model.FxResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -28,6 +29,7 @@ public class FxService {
         this.restTemplate = restTemplateBuilder.build();
     }
 
+    @Cacheable("quotes")
     public FxResponse getQuotes() {
         final String endPoint = String.format(
                 "%s?access_key=%s&currencies=%s&format=1",
